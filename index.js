@@ -17,7 +17,7 @@ const circle = L.circle([32.73, -117.13], {
 	color: 'red',
 	fillColor: '#f03',
 	fillOpacity: 0.5,
-	radius: 500,
+	radius: 1000,
 }).addTo(mymap);
 
 const polygon = L.polygon([[32.709, -117.18], [32.703, -117.16], [32.71, -117.147]]).addTo(mymap);
