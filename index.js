@@ -1,75 +1,35 @@
-let map;
-let ajaxRequest;
-let plotlist;
-const plotlayers = [];
+const mymap = L.map('map').setView([32.7, -117.1], 13);
+const accessToken = 'pk.eyJ1IjoiYXJuYXYtYWdnYXJ3YWwiLCJhIjoiY2pmbjF4Z3VvMTNsYTJxbmF5YnlwdzJ2OCJ9.E4ecfm2nMeMJQrPODOXR4w';
+// L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=' + accessToken, {
+// 	attribution:
+// 		'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
+// 	maxZoom: 18,
+// 	id: 'mapbox.streets',
+// 	accessToken: 'your.mapbox.access.token',
+// }).addTo(mymap);
 
-function stateChanged() {
-	// if AJAX returned a list of markers, add them to the map
-	if (ajaxRequest.readyState == 4) {
-		//use the info here that was returned
-		if (ajaxRequest.status == 200) {
-			plotlist = eval("(" + ajaxRequest.responseText + ")");
-			removeMarkers();
-			for (i = 0; i < plotlist.length; i++) {
-				var plotll = new L.LatLng(plotlist[i].lat, plotlist[i].lon, true);
-				var plotmark = new L.Marker(plotll);
-				plotmark.data = plotlist[i];
-				map.addLayer(plotmark);
-				plotmark.bindPopup("<h3>" + plotlist[i].name + "</h3>" + plotlist[i].details);
-				plotlayers.push(plotmark);
-			}
-		}
-	}
-}
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+	attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+}).addTo(mymap);
 
-function removeMarkers() {
-	for (i = 0; i < plotlayers.length; i++) {
-		map.removeLayer(plotlayers[i]);
-	}
-	plotlayers = [];
-}
+const marker = L.marker([32.7, -117.1]).addTo(mymap);
+const circle = L.circle([32.73, -117.13], {
+	color: 'red',
+	fillColor: '#f03',
+	fillOpacity: 0.5,
+	radius: 500,
+}).addTo(mymap);
 
-function askForPlots() {
-	// request the marker info with AJAX for the current bounds
-	var bounds = map.getBounds();
-	var minll = bounds.getSouthWest();
-	var maxll = bounds.getNorthEast();
-	var msg = 'leaflet/findbybbox.cgi?format=leaflet&bbox=' + minll.lng + ',' + minll.lat + ',' + maxll.lng + ',' + maxll.lat;
-	ajaxRequest.onreadystatechange = stateChanged;
-	ajaxRequest.open('GET', msg, true);
-	ajaxRequest.send(null);
-}
+const polygon = L.polygon([[32.709, -117.18], [32.703, -117.16], [32.71, -117.147]]).addTo(mymap);
 
-function getXmlHttpObject() {
-	if (window.XMLHttpRequest) { return new XMLHttpRequest(); }
-	if (window.ActiveXObject) { return new ActiveXObject("Microsoft.XMLHTTP"); }
-	return null;
-}
+marker.bindPopup('<b>Hello world!</b><br>I am a popup.').openPopup();
+circle.bindPopup('I am a circle.');
+polygon.bindPopup('I am a polygon.');
 
-function onMapMove(e) { askForPlots(); }
-
-function initmap() {
-	// set up AJAX request
-	ajaxRequest = getXmlHttpObject();
-	if (ajaxRequest == null) {
-		alert("This browser does not support HTTP Request");
-		return;
-	}
-
-	// set up the map
-	map = new L.Map('map');
-
-	// create the tile layer with correct attribution
-	const osmUrl = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
-	const osmAttrib = 'Map data © <a href="http://openstreetmap.org">OpenStreetMap</a> contributors';
-	const osm = new L.TileLayer(osmUrl, { minZoom: 8, maxZoom: 12, attribution: osmAttrib });
-
-	// start the map in South-East England
-	map.setView(new L.LatLng(32.7, -117.1), 9);
-	map.addLayer(osm);
-
-	askForPlots();
-	map.on('moveend', onMapMove);
-}
-
-initmap();
+const popup = L.popup();
+mymap.on('click', e =>
+	popup
+		.setLatLng(e.latlng)
+		.setContent('You clicked the map at ' + e.latlng.toString())
+		.openOn(mymap)
+);
