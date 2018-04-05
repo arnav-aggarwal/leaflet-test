@@ -1,20 +1,35 @@
-var map;
-var ajaxRequest;
-var plotlist;
-var plotlayers = [];
+const mymap = L.map('map').setView([32.7, -117.1], 13);
+const accessToken = 'pk.eyJ1IjoiYXJuYXYtYWdnYXJ3YWwiLCJhIjoiY2pmbjF4Z3VvMTNsYTJxbmF5YnlwdzJ2OCJ9.E4ecfm2nMeMJQrPODOXR4w';
+// L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=' + accessToken, {
+// 	attribution:
+// 		'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
+// 	maxZoom: 18,
+// 	id: 'mapbox.streets',
+// 	accessToken: 'your.mapbox.access.token',
+// }).addTo(mymap);
 
-function initmap() {
-	// set up the map
-	map = new L.Map('map');
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+	attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+}).addTo(mymap);
 
-	// create the tile layer with correct attribution
-	var osmUrl = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
-	var osmAttrib = 'Map data © <a href="http://openstreetmap.org">OpenStreetMap</a> contributors';
-	var osm = new L.TileLayer(osmUrl, { minZoom: 8, maxZoom: 12, attribution: osmAttrib });
+const marker = L.marker([32.7, -117.1]).addTo(mymap);
+const circle = L.circle([32.73, -117.13], {
+	color: 'red',
+	fillColor: '#f03',
+	fillOpacity: 0.5,
+	radius: 500,
+}).addTo(mymap);
 
-	// start the map in South-East England
-	map.setView(new L.LatLng(51.3, 0.7), 9);
-	map.addLayer(osm);
-}
+const polygon = L.polygon([[32.709, -117.18], [32.703, -117.16], [32.71, -117.147]]).addTo(mymap);
 
-initmap();
+marker.bindPopup('<b>Hello world!</b><br>I am a popup.').openPopup();
+circle.bindPopup('I am a circle.');
+polygon.bindPopup('I am a polygon.');
+
+const popup = L.popup();
+mymap.on('click', e =>
+	popup
+		.setLatLng(e.latlng)
+		.setContent('You clicked the map at ' + e.latlng.toString())
+		.openOn(mymap)
+);
