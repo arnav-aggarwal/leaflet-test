@@ -1,5 +1,5 @@
 const mymap = L.map('map').setView([32.7, -117.1], 13);
-const accessToken = 'pk.eyJ1IjoiYXJuYXYtYWdnYXJ3YWwiLCJhIjoiY2pmbjF4Z3VvMTNsYTJxbmF5YnlwdzJ2OCJ9.E4ecfm2nMeMJQrPODOXR4w';
+// const accessToken = 'pk.eyJ1IjoiYXJuYXYtYWdnYXJ3YWwiLCJhIjoiY2pmbjF4Z3VvMTNsYTJxbmF5YnlwdzJ2OCJ9.E4ecfm2nMeMJQrPODOXR4w';
 // L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=' + accessToken, {
 // 	attribution:
 // 		'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
